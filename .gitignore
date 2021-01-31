@@ -1,0 +1,23 @@
+# vim
+*~
+*.swp
+*.swo
+
+# patches
+*.orig
+*.patch
+
+#ctags
+.tags
+tags
+
+# python
+*.pyc
+*.pex
+
+# this project
+pantsbuild
+.deps
+.venv
+.pants*
+.pids/
