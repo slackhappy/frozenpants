@@ -17,5 +17,5 @@ if [ ! -f .venv/bin/pex ]; then
   if [ ! -d .venv ]; then
     python .deps/virtualenv.pyz -p "$PYTHON_PATH" .venv
   fi
-  .venv/bin/pip -v install pex
+  .venv/bin/pip install pex
 fi

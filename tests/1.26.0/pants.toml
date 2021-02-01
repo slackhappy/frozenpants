@@ -1,0 +1,28 @@
+[GLOBAL]
+pants_version = "1.26.0"
+
+# instead of using plugins dir for pantsbuild.pants plugins
+# use backend_packages because they are already bundled
+
+# Note: order is important.  for example, apparently
+# pants.contrib.scalajs needs to come before pants.contrib.node
+backend_packages.add = [
+  "pants.contrib.avro",
+  "pants.contrib.awslambda.python",
+  "pants.contrib.codeanalysis",
+  "pants.contrib.confluence",
+  "pants.contrib.cpp",
+  "pants.contrib.errorprone",
+  "pants.contrib.findbugs",
+  "pants.contrib.go",
+  "pants.contrib.googlejavaformat",
+  "pants.contrib.jax_ws",
+  "pants.contrib.mypy",
+  "pants.contrib.scalajs",
+  "pants.contrib.node",
+  "pants.contrib.python.checks",
+  "pants.contrib.scrooge",
+  "pants.contrib.thrifty",
+]
+
+

@@ -32,4 +32,5 @@ echo $PANTS_PEX_DEPS
 
 .venv/bin/pex $PANTS_PEX_DEPS  -m pants.bin.pants_loader:main -o pants.pex
 
-#./pantsav.pex --backend-packages="+['pants.contrib.avro']"  targets
+# show contents
+unzip -p pants.pex PEX-INFO | python -m json.tool

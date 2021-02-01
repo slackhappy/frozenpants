@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@master
       - name: Build project
         run: |
-          ./build_pex.sh
+          ./build.sh
       - name: Upload Artifact 18.04
         id: upload-artifact-1804
         uses: actions/upload-artifact@v1
@@ -30,8 +30,7 @@ jobs:
         uses: actions/checkout@master
       - name: Build project
         run: |
-          ./pyenv.sh 3.8.7
-          PYTHON_PATH=.deps/pyenv/versions/3.8.7/bin/python3 ./build_pex.sh
+          ./build.sh
       - name: Upload Artifact macos 10.15
         id: upload-artifact-macos10
         uses: actions/upload-artifact@v1
@@ -40,7 +39,7 @@ jobs:
           name: pants-cp38-macosx_10_15_x86_64
   release:
     name: Build Release
-    needs: build
+    needs: [build_ubuntu18, build_macos10]
     runs-on: ubuntu-latest
     steps:
       - name: Download Artifact 18.06

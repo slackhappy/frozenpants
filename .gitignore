@@ -16,8 +16,8 @@ tags
 *.pex
 
 # this project
-pantsbuild
 .deps
 .venv
 .pants*
 .pids/
+.cache/
