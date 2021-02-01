@@ -42,11 +42,16 @@ jobs:
     needs: [build_ubuntu18, build_macos10]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Artifact
+      - name: Download Artifact 1.26.0 linux cp36
         id: download-artifact-1804
         uses: actions/download-artifact@v1
         with:
           name: pants-1.26.0-cp36-linux_x86_64
+      - name: Download Artifact 1.26.0 macos 10.15
+        id: download-artifact-macos10
+        uses: actions/download-artifact@v1
+        with:
+          name: pants-1.26.0-cp38-macosx_10_15_x86_64
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1.0.0
@@ -61,7 +66,7 @@ jobs:
         id: upload-release-asset-18
         uses: actions/upload-release-asset@v1.0.1
         env:
-          # made by adding a secret to the repository
+          # made by adding a secret to the repository, see https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
           GITHUB_TOKEN: ${{ secrets.frozenpants_token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
