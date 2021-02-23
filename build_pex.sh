@@ -1,36 +1,35 @@
-#! /bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # best explanation so far of tags
 # https://snarky.ca/the-challenges-in-designing-a-library-for-pep-425/
 
-./bootstrap.sh
-
+PEX_VERSION=2.1.31
 PANTS_VERSION=1.26.0
-PANTS_PEX_DEPS="
-pantsbuild.pants==${PANTS_VERSION}
-pantsbuild.pants.contrib.avro==${PANTS_VERSION}
-pantsbuild.pants.contrib.awslambda_python==${PANTS_VERSION}
-pantsbuild.pants.contrib.buildgen==${PANTS_VERSION}
-pantsbuild.pants.contrib.codeanalysis==${PANTS_VERSION}
-pantsbuild.pants.contrib.confluence==${PANTS_VERSION}
-pantsbuild.pants.contrib.cpp==${PANTS_VERSION}
-pantsbuild.pants.contrib.errorprone==${PANTS_VERSION}
-pantsbuild.pants.contrib.findbugs==${PANTS_VERSION}
-pantsbuild.pants.contrib.go==${PANTS_VERSION}
-pantsbuild.pants.contrib.googlejavaformat==${PANTS_VERSION}
-pantsbuild.pants.contrib.jax_ws==${PANTS_VERSION}
-pantsbuild.pants.contrib.mypy==${PANTS_VERSION}
-pantsbuild.pants.contrib.node==${PANTS_VERSION}
-pantsbuild.pants.contrib.python.checks==${PANTS_VERSION}
-pantsbuild.pants.contrib.python.checks.checker==${PANTS_VERSION}
-pantsbuild.pants.contrib.scalajs==${PANTS_VERSION}
-pantsbuild.pants.contrib.scrooge==${PANTS_VERSION}
-pantsbuild.pants.contrib.thrifty==${PANTS_VERSION}
-pantsbuild.pants.testutil==${PANTS_VERSION}
-"
-echo $PANTS_PEX_DEPS
+PANTS_INTERPRETER_CONSTRAINT="CPython==3.6.*"
 
-.venv/bin/pex $PANTS_PEX_DEPS  -m pants.bin.pants_loader:main -o pants.pex
+function pex() {
+    local pex_exe="./pex-${PEX_VERSION}.pex"
+    if [ ! -x "${pex_exe}" ]; then
+         wget \
+             -q \
+             -O - \
+             https://github.com/pantsbuild/pex/releases/download/v${PEX_VERSION}/pex \
+             > "${pex_exe}.download"
+         chmod +x "${pex_exe}.download"
+         mv "${pex_exe}.download" "${pex_exe}"
+    fi
+    echo "${pex_exe}"
+}
+
+PANTS_VERSION=${PANTS_VERSION} \
+$(pex) \
+    -r requirements.txt \
+    --interpreter-constraint "${PANTS_INTERPRETER_CONSTRAINT}" \
+    -c pants \
+    -o pants.pex \
+    --venv
 
 # show contents
-unzip -p pants.pex PEX-INFO | python -m json.tool
+PEX_TOOLS=1 ./pants.pex info --indent 4
