@@ -1,4 +1,6 @@
-#! /bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # best explanation so far of tags
 # https://snarky.ca/the-challenges-in-designing-a-library-for-pep-425/
@@ -6,31 +8,14 @@
 ./bootstrap.sh
 
 PANTS_VERSION=1.26.0
-PANTS_PEX_DEPS="
-pantsbuild.pants==${PANTS_VERSION}
-pantsbuild.pants.contrib.avro==${PANTS_VERSION}
-pantsbuild.pants.contrib.awslambda_python==${PANTS_VERSION}
-pantsbuild.pants.contrib.buildgen==${PANTS_VERSION}
-pantsbuild.pants.contrib.codeanalysis==${PANTS_VERSION}
-pantsbuild.pants.contrib.confluence==${PANTS_VERSION}
-pantsbuild.pants.contrib.cpp==${PANTS_VERSION}
-pantsbuild.pants.contrib.errorprone==${PANTS_VERSION}
-pantsbuild.pants.contrib.findbugs==${PANTS_VERSION}
-pantsbuild.pants.contrib.go==${PANTS_VERSION}
-pantsbuild.pants.contrib.googlejavaformat==${PANTS_VERSION}
-pantsbuild.pants.contrib.jax_ws==${PANTS_VERSION}
-pantsbuild.pants.contrib.mypy==${PANTS_VERSION}
-pantsbuild.pants.contrib.node==${PANTS_VERSION}
-pantsbuild.pants.contrib.python.checks==${PANTS_VERSION}
-pantsbuild.pants.contrib.python.checks.checker==${PANTS_VERSION}
-pantsbuild.pants.contrib.scalajs==${PANTS_VERSION}
-pantsbuild.pants.contrib.scrooge==${PANTS_VERSION}
-pantsbuild.pants.contrib.thrifty==${PANTS_VERSION}
-pantsbuild.pants.testutil==${PANTS_VERSION}
-"
-echo $PANTS_PEX_DEPS
 
-.venv/bin/pex $PANTS_PEX_DEPS  -m pants.bin.pants_loader:main -o pants.pex
+echo Building pants "$PANTS_VERSION" pex
+PANTS_VERSION=${PANTS_VERSION} \
+.venv/bin/pex -r requirements.txt \
+    -c pants \
+    -o pants.pex \
+    --venv
 
+echo Done.  Contents:
 # show contents
-unzip -p pants.pex PEX-INFO | python -m json.tool
+PEX_TOOLS=1 .venv/bin/python3 ./pants.pex info --indent 4
