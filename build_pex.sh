@@ -7,7 +7,10 @@ set -euo pipefail
 
 PEX_VERSION=2.1.31
 PANTS_VERSION=1.26.0
-PANTS_INTERPRETER_CONSTRAINT="CPython==3.6.*"
+PYTHON=${PYTHON:-python3}
+PYTHON_MAJOR_MINOR=$($PYTHON --version | grep -o '3\.[0-9]*')
+PANTS_INTERPRETER_CONSTRAINT="CPython==$PYTHON_MAJOR_MINOR.*"
+echo Setting python constraint $PANTS_INTERPRETER_CONSTRAINT
 
 function pex() {
     local pex_exe="./pex-${PEX_VERSION}.pex"
@@ -24,7 +27,7 @@ function pex() {
 }
 
 PANTS_VERSION=${PANTS_VERSION} \
-$(pex) \
+$PYTHON $(pex) \
     -r requirements.txt \
     --interpreter-constraint "${PANTS_INTERPRETER_CONSTRAINT}" \
     -c pants \

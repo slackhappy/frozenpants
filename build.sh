@@ -12,5 +12,5 @@ elif [ "$(uname)" == 'Darwin' ]; then
     # python3.8 because xcode won't compile python c libs
     # against it, but downloading a new tarball works
     ./pyenv.sh 3.8.7
-    PYTHON_PATH=.deps/pyenv/versions/3.8.7/bin/python3 ./build_pex.sh
+    PYTHON=.deps/pyenv/versions/3.8.7/bin/python3 ./build_pex.sh
 fi
